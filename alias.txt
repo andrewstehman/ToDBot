@@ -1,0 +1,21 @@
+faf,Fafnir
+nid,Fafnir,HQ
+nidhogg,Fafnir,HQ
+Adamantoise,Turtle
+Aspid,Turtle,HQ
+Aspidochelone,Turtle,HQ
+behemoth,Behe
+King Behemoth,Behe,HQ
+KB,Behe,HQ
+Tia,Tiamat
+Jormy,Jorm
+Jormungand,Jorm
+King Arthro,KA
+Khimaira,Khim
+Cerberus,Cerb
+Sim,Simurgh
+Padfoot,Pad
+Voluptuous Vivian,Vivian
+LoO,Onzozo
+Lord of Onzozo,Onzozo
+Alky,Alkyoneus
