@@ -32,29 +32,13 @@ def load_sheet():
 
 
     data = sheet.get_all_values()
-    #print(type(data[0]))
+
     data.pop(0) # remove an empty row at the top of the sheet
     headers = data.pop(0)
 
     df = pd.DataFrame(data, columns=headers)
 
-    # print(df.head())
-    # print(df['NM'].tolist())
-    # print(df.iloc[0])
-    # print(df.iat[0, 6])
-    # print('----------')
-    # print(get_row_of_mob('Jorm'))
-    # sheet.update_cell(3, 7, 'Day 6')
-    # cells = sheet.range('A1:AF22')
-    #
-    # print(type(cells[0]))
 
-    # dataframe = pd.read_table(cells)
-
-    # print(dataframe)
-
-    # for cell in cells:
-    #     print(cell.value)
 
 def reload_sheet():
     global sheet
@@ -139,21 +123,3 @@ def get_notes(mob):
     row = get_row_of_mob(mob)
     col = get_col_of_notes()
     return df.iat[row, col]
-
-#
-# pd.set_option('display.max_columns', 10)
-# pd.set_option('display.max_rows', 5)
-#
-#load_sheet()
-# print(get_col_of_TOD())
-# get_notes('Fafnir')
-#
-# print(df)
-#
-# update_sheet('Fafnir', '5/8/2023 16:03:00')
-#
-# print(df)
-
-
-#update_sheet('faf', '5/8/2023 16:03:12')
-

@@ -49,11 +49,3 @@ def parse_message(content):
     time_of_death = input_time.strftime('%m/%d/%Y %H:%M:%S')
 
     return mob, time_of_death
-
-
-#parse_message('the time is 20:50:20 EST+1')
-
-
-# ingest_message('!ToD faf 11:32:34 est')
-#
-# print(mob, time_of_death)
