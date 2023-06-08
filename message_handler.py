@@ -2,6 +2,10 @@ import re
 import pytz
 from datetime import datetime, timedelta
 
+import config
+import datetime_util
+
+
 def ingest_message(message):
     content = message.content[5:]
     #content = message[5:]
@@ -31,10 +35,7 @@ def parse_message(content):
     tz_abbrev = match.group(6) or 'EST'
     after_eastern = int(match.group(7) or 0)
 
-    # Convert the time to Eastern Standard Time
-
-
-    input_time = datetime.now(pytz.timezone('US/Eastern'))
+    input_time = datetime_util.get_current_time()
     input_time = input_time.replace(hour=hours, minute=minutes, second=seconds)
     print('time before adjusting for timezone', input_time)
     input_time = input_time - timedelta(hours=after_eastern)
@@ -46,6 +47,6 @@ def parse_message(content):
     print('day adjusted time', input_time)
 
     # Format the time
-    time_of_death = input_time.strftime('%m/%d/%Y %H:%M:%S')
+    time_of_death = input_time.strftime(config.date_format)
 
     return mob, time_of_death
