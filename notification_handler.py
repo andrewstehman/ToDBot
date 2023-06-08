@@ -32,6 +32,7 @@ def get_notifications_to_send():
 
     if ((last_menu_notification is None or last_menu_notification.date() < now.date())
         and (now.hour == 8 and now.minute <= 5)):
+        last_menu_notification = now
         messages.append(get_menu_messages())
 
     for notification in notification_queue:
@@ -51,9 +52,9 @@ def get_menu_messages():
         if is_open_window(mob):
             messages.append('{} is in window now!'.format(mob))
         elif is_before_window(mob):
-            tod = sheet_handler.get_col_by_mob('ONLY TOUCH', mob)
-            tod = datetime_util.get_12_hour_time_from_date(datetime_util.get_datetime_from_str(tod))
-            messages.append('{} opens at {}!'.format(mob, tod))
+            first_window = sheet_handler.get_first_window()
+            first_window = datetime_util.get_12_hour_time_from_date(first_window)
+            messages.append('{} opens at {}!'.format(mob, first_window))
     return '\n'.join(messages)
 
 
