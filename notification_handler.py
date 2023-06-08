@@ -77,7 +77,7 @@ def get_messages_for_mob(tod, mob):
         message = ''
 
         if period == 60:
-            message = '1 hour'
+            message = '@here 1 hour'
         else:
             message = str(period) + ' minutes'
 
