@@ -96,7 +96,7 @@ def update_sheet(mob_alias, time_of_death):
 
 
 def update_helper(mob, time_of_death, is_HQ):
-    notes = get_notes(mob)
+    notes = get_col_by_mob('Day/Notes', mob)
     row = get_row_of_mob(mob)
 
     if mob in config.HQ_NMs:

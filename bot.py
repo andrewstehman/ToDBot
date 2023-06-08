@@ -38,6 +38,7 @@ async def on_message(message):
 
     if client.user == message.author:
         return
+    # elif message.content.startswith('test'):
     elif message.content.startswith('!ToD'):
         try:
             mob, time_of_death = message_handler.ingest_message(message)
@@ -80,6 +81,8 @@ async def start_notification_thread():
                 # message = '@here ' + message
                 await channel.send(message)
 
+        sheet_handler.reload_sheet()
+        notification_handler.queue_all_from_sheet()
         await asyncio.sleep(60)
 
 loop = asyncio.get_event_loop()

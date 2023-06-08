@@ -135,6 +135,7 @@ def queue_messages_for_mob(mob):
 
 def queue_all_from_sheet():
     global notification_queue
+    notification_queue = []
     mobs = sheet_handler.get_all_mobs_as_list()
 
     for mob in mobs:
