@@ -52,7 +52,7 @@ def get_menu_messages():
         if is_open_window(mob):
             messages.append('{} is in window now!'.format(mob))
         elif is_before_window(mob):
-            first_window = sheet_handler.get_first_window()
+            first_window = sheet_handler.get_first_window(mob)
             first_window = datetime_util.get_12_hour_time_from_date(first_window)
             messages.append('{} opens at {}!'.format(mob, first_window))
     return '\n'.join(messages)

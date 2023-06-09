@@ -41,7 +41,7 @@ def parse_message(content):
     input_time = input_time - timedelta(hours=after_eastern)
     print('time after adjusting for timezone', input_time)
 
-    if input_time > datetime.now(pytz.timezone('US/Eastern')):
+    if input_time > datetime_util.get_current_time():
         input_time = input_time - timedelta(days=1)
 
     print('day adjusted time', input_time)
