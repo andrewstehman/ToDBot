@@ -47,14 +47,34 @@ def get_notifications_to_send():
 
 def get_menu_messages():
     messages = ['Here is today\'s menu (all times in EST):']
+    windows = []
     mobs = sheet_handler.get_all_mobs_as_list()
+    now = datetime_util.get_current_time()
+
     for mob in mobs:
         if is_open_window(mob):
             messages.append('{} is in window now!'.format(mob))
         elif is_before_window(mob):
             first_window = sheet_handler.get_first_window(mob)
+            first_window_date = first_window.date()
             first_window = datetime_util.get_12_hour_time_from_date(first_window)
+            if first_window_date == now.date():
+                windows.append((False, first_window, mob))
+            elif first_window_date == (now + timedelta(days=1)).date():
+                windows.append((True, first_window, mob))
+
+
+    windows = sorted(windows)
+
+    for tuple in windows:
+        is_tomorrow = tuple[0]
+        first_window = tuple[1]
+        mob = tuple[2]
+        if is_tomorrow:
+            messages.append('{} opens tomorrow at {}!'.format(mob, first_window))
+        else:
             messages.append('{} opens at {}!'.format(mob, first_window))
+
     return '\n'.join(messages)
 
 
