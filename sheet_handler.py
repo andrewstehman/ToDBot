@@ -29,14 +29,18 @@ def load_sheet():
     global df
     global google_client
 
+    print("logging in to google service account")
+
     credentials = ServiceAccountCredentials.from_json_keyfile_name("creds.json",
                                                                    scopes)  # access the json key you downloaded earlier
     google_client = gspread.authorize(credentials)  # authenticate the JSON key with gspread
     print('opening sheet {}'.format(sheet_name))
     sheet = google_client.open(sheet_name)  # open sheet
-
-    sheet = sheet.get_worksheet(0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
-
+    print("google sheet opened!")
+    try:
+        sheet = sheet.get_worksheet(0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
+    except Exception as e:
+        print("An exception occured opening the google sheet: {}".format(e))
 
     data = sheet.get_all_values()
 
@@ -52,7 +56,11 @@ def reload_sheet():
     global df
 
     sheet = google_client.open(sheet_name)
-    sheet = sheet.get_worksheet(0)
+    try:
+        sheet = sheet.get_worksheet(
+            0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
+    except Exception as e:
+        print("An exception occured opening the google sheet: {}".format(e))
 
     data = sheet.get_all_values()
 
@@ -103,8 +111,11 @@ def update_helper(mob, time_of_death, is_HQ):
         if is_HQ or notes == "":
             notes = 'Day 1'
         else:
-            day = int(notes.split(' ')[1]) + 1
-            notes = 'Day ' + str(day)
+            # if the ToD is before the first window, do not update the day
+            print(f'time of death {time_of_death}')
+            if datetime_util.get_datetime_from_str(time_of_death) > get_first_window(mob):
+                day = int(notes.split(' ')[1]) + 1
+                notes = 'Day ' + str(day)
 
     # print('update helper mob {} tod {} hq {}'.format(mob, time_of_death, is_HQ))
     sheet.update_cell(row + row_offset, get_col_of_TOD() + col_offset, time_of_death)
@@ -131,6 +142,7 @@ def get_first_window(mob):
         min_respawn_time = get_col_by_mob('min respawn time', mob)
         min_hours, min_minutes, min_seconds = min_respawn_time.split(':')
         first_window = tod + timedelta(hours=int(min_hours), minutes=int(min_minutes))
+        print(f'first window {first_window}')
         return first_window
 def get_sheet_dataframe():
     return df

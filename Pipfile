@@ -9,6 +9,7 @@ pytz = "*"
 datetime = "*"
 pandas = "*"
 asyncio = "*"
+gspread = "5.7.2"
 
 [dev-packages]
 

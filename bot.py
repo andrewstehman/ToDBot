@@ -19,18 +19,20 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
-
+bot_started = False
 
 @client.event
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
+    global bot_started
+    if not bot_started:
+        for guild in client.guilds:
+            config.guilds.append(guild)
 
-    for guild in client.guilds:
-        config.guilds.append(guild)
+        sheet_handler.load_sheet()
 
-    sheet_handler.load_sheet()
-
-    notification_handler.queue_all_from_sheet()
+        notification_handler.queue_all_from_sheet()
+        bot_started = True
 
 @client.event
 async def on_message(message):
@@ -81,7 +83,7 @@ async def start_notification_thread():
                 # message = '@here ' + message
                 await channel.send(message)
 
-        sheet_handler.reload_sheet()
+        # sheet_handler.reload_sheet()
         notification_handler.queue_all_from_sheet()
         await asyncio.sleep(60)
 
@@ -92,3 +94,4 @@ asyncio.ensure_future(start_discord())
 
 
 loop.run_forever()
+
