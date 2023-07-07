@@ -74,6 +74,7 @@ async def start_notification_thread():
                     print('notification channel - {}'.format(channel.name))
                     notification_channel = channel
 
+
     while True:
 
         if notification_channel is not None:
@@ -81,7 +82,7 @@ async def start_notification_thread():
             # print(messages_to_send)
             for message in messages_to_send:
                 # message = '@here ' + message
-                await channel.send(message)
+                await notification_channel.send(message)
 
         # sheet_handler.reload_sheet()
         notification_handler.queue_all_from_sheet()
