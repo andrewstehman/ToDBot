@@ -50,6 +50,7 @@ def get_menu_messages():
     windows = []
     mobs = sheet_handler.get_all_mobs_as_list()
     now = datetime_util.get_current_time()
+    todays_date = now.date()
 
     for mob in mobs:
         if is_open_window(mob):
@@ -58,18 +59,33 @@ def get_menu_messages():
             first_window = sheet_handler.get_first_window(mob)
             first_window_date = first_window.date()
             first_window = datetime_util.get_12_hour_time_from_date(first_window)
-            if first_window_date == now.date():
-                windows.append((False, first_window, mob))
+
+            if first_window_date == todays_date:
+                is_tomorrow = False
             elif first_window_date == (now + timedelta(days=1)).date():
-                windows.append((True, first_window, mob))
+                is_tomorrow = True
+            else:
+                continue
+
+            if first_window.endswith('PM'):
+                is_afternoon = False
+            else:
+                is_afternoon = True
+
+            windows.append((is_tomorrow, is_afternoon, first_window, mob))
 
 
     windows = sorted(windows)
 
     for tuple in windows:
         is_tomorrow = tuple[0]
-        first_window = tuple[1]
-        mob = tuple[2]
+        first_window = tuple[2]
+        mob = tuple[3]
+
+        if mob in config.HQ_NMs:
+            hq_day = sheet_handler.get_col_by_mob('Day/Notes', mob)
+            mob = mob + ' ' + hq_day
+
         if is_tomorrow:
             messages.append('{} opens tomorrow at {}!'.format(mob, first_window))
         else:
