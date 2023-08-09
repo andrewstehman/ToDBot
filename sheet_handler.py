@@ -142,7 +142,7 @@ def get_first_window(mob):
         min_respawn_time = get_col_by_mob('min respawn time', mob)
         min_hours, min_minutes, min_seconds = min_respawn_time.split(':')
         first_window = tod + timedelta(hours=int(min_hours), minutes=int(min_minutes))
-        print(f'first window {first_window}')
+        # print(f'first window {first_window}')
         return first_window
 def get_sheet_dataframe():
     return df

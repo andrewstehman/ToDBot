@@ -60,17 +60,17 @@ def get_menu_messages():
             first_window_date = first_window.date()
             first_window = datetime_util.get_12_hour_time_from_date(first_window)
 
-            if first_window_date == todays_date:
-                is_tomorrow = False
-            elif first_window_date == (now + timedelta(days=1)).date():
+            if first_window_date == (now + timedelta(days=1)).date():
                 is_tomorrow = True
+            elif first_window_date == todays_date:
+                is_tomorrow = False
             else:
                 continue
 
             if first_window.endswith('PM'):
-                is_afternoon = False
-            else:
                 is_afternoon = True
+            else:
+                is_afternoon = False
 
             windows.append((is_tomorrow, is_afternoon, first_window, mob))
 
