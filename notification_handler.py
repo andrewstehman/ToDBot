@@ -57,39 +57,33 @@ def get_menu_messages():
             messages.append('{} is in window now!'.format(mob))
         elif is_before_window(mob):
             first_window = sheet_handler.get_first_window(mob)
-            first_window_date = first_window.date()
-            first_window = datetime_util.get_12_hour_time_from_date(first_window)
 
-            if first_window_date == (now + timedelta(days=1)).date():
-                is_tomorrow = True
-            elif first_window_date == todays_date:
-                is_tomorrow = False
-            else:
-                continue
-
-            if first_window.endswith('PM'):
-                is_afternoon = True
-            else:
-                is_afternoon = False
-
-            windows.append((is_tomorrow, is_afternoon, first_window, mob))
+            windows.append((first_window, mob))
 
 
     windows = sorted(windows)
 
     for tuple in windows:
-        is_tomorrow = tuple[0]
-        first_window = tuple[2]
-        mob = tuple[3]
+        first_window = tuple[0]
+        mob = tuple[1]
 
         if mob in config.HQ_NMs:
             hq_day = sheet_handler.get_col_by_mob('Day/Notes', mob)
             mob = mob + ' ' + hq_day
 
-        if is_tomorrow:
-            messages.append('{} opens tomorrow at {}!'.format(mob, first_window))
+        if first_window.date() == (now + timedelta(days=1)).date():
+            is_tomorrow = True
+        elif first_window.date() == todays_date:
+            is_tomorrow = False
         else:
-            messages.append('{} opens at {}!'.format(mob, first_window))
+            continue
+
+        first_window_12_hr_format = datetime_util.get_12_hour_time_from_date(first_window)
+
+        if is_tomorrow:
+            messages.append('{} opens tomorrow at {}!'.format(mob, first_window_12_hr_format))
+        else:
+            messages.append('{} opens at {}!'.format(mob, first_window_12_hr_format))
 
     return '\n'.join(messages)
 
