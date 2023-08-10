@@ -81,9 +81,9 @@ def get_menu_messages():
         first_window_12_hr_format = datetime_util.get_12_hour_time_from_date(first_window)
 
         if is_tomorrow:
-            messages.append('{} opens tomorrow at {}!'.format(mob, first_window_12_hr_format))
+            messages.append('{0: <13} opens tomorrow at {1}!'.format(mob, first_window_12_hr_format))
         else:
-            messages.append('{} opens at {}!'.format(mob, first_window_12_hr_format))
+            messages.append('{0: <13} opens at {1}!'.format(mob, first_window_12_hr_format))
 
     return '\n'.join(messages)
 
