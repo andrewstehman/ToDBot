@@ -36,7 +36,7 @@ async def on_ready():
         bot_started = True
 
 @client.event
-async def on_message(message)::
+async def on_message(message):
     print('New message from [{}] in channel [{}] :: {}'.format(str(message.author.name), str(message.channel.name), str(message.content)))
 
     if client.user == message.author:
