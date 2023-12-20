@@ -36,16 +36,16 @@ async def on_ready():
         bot_started = True
 
 @client.event
-async def on_message(message):
-    print('New message from {} in channel {} :: {}'.format(str(str.message.channel.name), str(message.author.name), str(message.content)))
+async def on_message(message)::
+    print('New message from [{}] in channel [{}] :: {}'.format(str(message.author.name), str(message.channel.name), str(message.content)))
 
     if client.user == message.author:
         return
     # elif message.content.startswith('test'):
     elif message.content.lower().strip().startswith("!tod reload"):
-        sheet_handler.reload_sheet()
+        await sheet_handler.reload_sheet()
     elif message.content.lower().strip().startswith("!tod menu"):
-        notification_channel.send(notification_handler.get_menu_messages())
+        await notification_channel.send(notification_handler.get_menu_messages())
     elif message.content.lower().startswith('!tod'):
         try:
             mob, time_of_death = message_handler.ingest_message(message)

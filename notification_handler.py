@@ -20,7 +20,7 @@ async def test_notifications():
                 for channel in guild.text_channels:
                     print(guild.name, channel.name)
                     if channel.name == 'test-channel':
-                        await channel.send('test message')
+                        await channel.send('starting test_notification() -- test message')
         await asyncio.sleep(300)
 
 def get_notifications_to_send():
