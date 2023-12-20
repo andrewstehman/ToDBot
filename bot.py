@@ -20,6 +20,7 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 bot_started = False
+notification_channel = None
 
 @client.event
 async def on_ready():
@@ -41,7 +42,9 @@ async def on_message(message):
     if client.user == message.author:
         return
     # elif message.content.startswith('test'):
-    elif message.content.startswith('!ToD'):
+    elif message.content.lower().strip().startswith("!tod reload"):
+        notification_channel.send(notification_handler.get_menu_messages())
+    elif message.content.lower().startswith('!tod'):
         try:
             mob, time_of_death = message_handler.ingest_message(message)
             sheet_handler.update_sheet(mob, time_of_death)
@@ -62,6 +65,7 @@ async def start_notification_thread():
     print('starting notifications')
     # await notification_handler.test_notifications()
 
+    global notification_channel
     notification_channel = None
 
     for guild in config.guilds:
