@@ -122,7 +122,7 @@ def get_messages_for_mob(tod, mob):
         if period == minutes_to_alert_before[-1]:
             window_1 = sheet_handler.get_col_by_mob("w1", mob)[1:]
             window_2 = sheet_handler.get_col_by_mob("w2", mob)[1:]
-            message = message + 'Windows : {}/{}'.format(window_1, window_2)
+            message = message + ' Windows : {}/{}'.format(window_1, window_2)
 
         messages.append((timestamp, message))
 
