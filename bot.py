@@ -37,7 +37,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    print('New message :: {}'.format(str(message.author.name) + ' ' + str(message.content)))
+    print('New message from {} in channel {} :: {}'.format(str(str.message.channel), str(message.author.name), str(message.content)))
 
     if client.user == message.author:
         return
