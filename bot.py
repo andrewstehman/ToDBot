@@ -43,6 +43,8 @@ async def on_message(message):
         return
     # elif message.content.startswith('test'):
     elif message.content.lower().strip().startswith("!tod reload"):
+        sheet_handler.reload_sheet()
+    elif message.content.lower().strip().startswith("!tod menu"):
         notification_channel.send(notification_handler.get_menu_messages())
     elif message.content.lower().startswith('!tod'):
         try:
