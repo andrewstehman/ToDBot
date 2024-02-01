@@ -120,8 +120,7 @@ def get_messages_for_mob(tod, mob):
 
         # if last alert message add windows
         if period == minutes_to_alert_before[-1]:
-            (win_1, win_2) = get_windows_from_mob_as_tuple(mob)
-            message = message + ' ' + get_windows_as_str()
+            message = message + ' ' + get_windows_as_str(mob)
 
         messages.append((timestamp, message))
 
