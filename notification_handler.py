@@ -54,7 +54,7 @@ def get_menu_messages():
 
     for mob in mobs:
         if is_open_window(mob):
-            messages.append('{} is in window now!'.format(mob))
+            messages.append('{} is in window now! ({})'.format(mob, get_windows_as_str(mob)))
         elif is_before_window(mob):
             first_window = sheet_handler.get_first_window(mob)
 
@@ -120,13 +120,22 @@ def get_messages_for_mob(tod, mob):
 
         # if last alert message add windows
         if period == minutes_to_alert_before[-1]:
-            window_1 = sheet_handler.get_col_by_mob("w1", mob)[1:]
-            window_2 = sheet_handler.get_col_by_mob("w2", mob)[1:]
-            message = message + ' Windows : {}/{}'.format(window_1, window_2)
+            (win_1, win_2) = get_windows_from_mob_as_tuple(mob)
+            message = message + ' ' + get_windows_as_str()
 
         messages.append((timestamp, message))
 
     return messages
+
+
+def get_windows_as_str(mob):
+    windows = get_windows_from_mob_as_tuple(mob)
+    message = 'Windows: {}/{}'.format(*windows)
+    return message
+def get_windows_from_mob_as_tuple(mob):
+    window_1 = sheet_handler.get_col_by_mob("w1", mob)[1:]
+    window_2 = sheet_handler.get_col_by_mob("w2", mob)[1:]
+    return (window_1, window_2)
 
 def is_before_window(mob):
     first_window = sheet_handler.get_first_window(mob)
