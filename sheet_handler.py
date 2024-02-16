@@ -35,10 +35,10 @@ def load_sheet():
                                                                    scopes)  # access the json key you downloaded earlier
     google_client = gspread.authorize(credentials)  # authenticate the JSON key with gspread
     print('opening sheet {}'.format(sheet_name))
-    sheet = google_client.open(sheet_name)  # open sheet
+    document = google_client.open(sheet_name)  # open sheet
     print("google sheet opened!")
     try:
-        sheet = sheet.get_worksheet(0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
+        sheet = document.get_worksheet(0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
     except Exception as e:
         print("An exception occured opening the google sheet: {}".format(e))
 
@@ -55,10 +55,9 @@ def reload_sheet():
     global sheet
     global df
 
-    sheet = google_client.open(sheet_name)
+    document = google_client.open(sheet_name)
     try:
-        sheet = sheet.get_worksheet(
-            0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
+        sheet = document.get_worksheet(0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
     except Exception as e:
         print("An exception occured opening the google sheet: {}".format(e))
 
