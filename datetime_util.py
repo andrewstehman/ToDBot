@@ -3,9 +3,9 @@ import pytz
 
 def get_datetime_from_str(date_str):
     time = datetime.strptime(date_str, '%m/%d/%Y %H:%M:%S')
-    #print('time gotten from string      ', time)
+    #logging.info('time gotten from string      ', time)
     time = time.replace(tzinfo=pytz.timezone('US/Eastern'))
-    #print('time after replacing timezone', time)
+    #logging.info('time after replacing timezone', time)
     return time
 
 def get_time_btw_dates(first_date, second_date):

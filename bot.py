@@ -1,16 +1,15 @@
-import asyncio
 import os
 import discord
-import threading
 import message_handler
 import notification_handler
 import config
-import time
 import asyncio
-
+import logging
+import sys
 from dotenv import load_dotenv
-
 import sheet_handler
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - [%(levelname)s] - %(message)s', stream=sys.stdout)
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -24,7 +23,7 @@ notification_channel = None
 
 @client.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+    logging.info(f'{client.user} has connected to Discord!')
     global bot_started
     if not bot_started:
         for guild in client.guilds:
@@ -37,26 +36,31 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    print('New message from [{}] in channel [{}] :: {}'.format(str(message.author.name), str(message.channel.name), str(message.content)))
+    logging.info('New message from [{}] in channel [{}] :: {}'.format(str(message.author.name), str(message.channel.name), str(message.content)))
 
     if client.user == message.author:
         return
     # elif message.content.startswith('test'):
-    elif message.content.lower().strip().startswith("!tod reload"):
-        await sheet_handler.reload_sheet()
     elif message.content.lower().strip().startswith("!tod menu"):
+        logging.info("reloading sheet...")
+        await sheet_handler.reload_sheet()
+        logging.info("sending menu...")
         await notification_channel.send(notification_handler.get_menu_messages())
     elif message.content.lower().startswith('!tod'):
         try:
             mob, time_of_death = message_handler.ingest_message(message)
+            logging.info("message handled, updating sheet...")
             sheet_handler.update_sheet(mob, time_of_death)
+            logging.info("sheet updated, adding thumbs up...")
 
             await message.add_reaction(config.thumbs_up)
+            logging.info("message thumbs'd up")
 
         except Exception as e:
-            print('An error occured handling the message: {}'.format(str(e)))
+            logging.info('An error occured handling the message: {}'.format(str(e)))
 
         notification_handler.update_messages_for_mob(mob)
+        logging.info("messages updated for mob [{}]".format(mob))
 
 
 async def start_discord():
@@ -64,20 +68,20 @@ async def start_discord():
 
 async def start_notification_thread():
     await asyncio.sleep(10)
-    print('starting notifications')
+    logging.info('starting notifications')
     # await notification_handler.test_notifications()
 
     global notification_channel
     notification_channel = None
 
     for guild in config.guilds:
-        print(guild.name)
+        logging.info(guild.name)
         if guild.name == config.guild_name:
             for channel in guild.text_channels:
 
                 if channel.name == config.notification_channel:
-                    print('sending notifications in guild - {}'.format(guild.name))
-                    print('notification channel - {}'.format(channel.name))
+                    logging.info('sending notifications in guild - {}'.format(guild.name))
+                    logging.info('notification channel - {}'.format(channel.name))
                     notification_channel = channel
 
 
@@ -85,7 +89,7 @@ async def start_notification_thread():
 
         if notification_channel is not None:
             messages_to_send = notification_handler.get_notifications_to_send()
-            # print(messages_to_send)
+            # logging.info(messages_to_send)
             for message in messages_to_send:
                 # message = '@here ' + message
                 await notification_channel.send(message)

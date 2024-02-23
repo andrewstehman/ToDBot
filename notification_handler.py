@@ -1,24 +1,21 @@
-import pytz
-import config
-from datetime import datetime, timedelta
+from datetime import timedelta
 import asyncio
-import time
 import config
 import datetime_util
 import sheet_handler
-import pandas as pd
+import logging
 
 notification_queue = []
 minutes_to_alert_before = [60, 30, 5]
 last_menu_notification = None
 async def test_notifications():
-    print(config.guilds)
+    logging.info(config.guilds)
     queue_all_from_sheet()
     while True:
         for guild in config.guilds:
             if guild.name == config.test_guild:
                 for channel in guild.text_channels:
-                    print(guild.name, channel.name)
+                    logging.info(guild.name, channel.name)
                     if channel.name == 'test-channel':
                         await channel.send('starting test_notification() -- test message')
         await asyncio.sleep(300)
@@ -26,7 +23,7 @@ async def test_notifications():
 def get_notifications_to_send():
     global notification_queue
     global last_menu_notification
-    # print('notification queue - {}'.format(str(notification_queue)))
+    # logging.info('notification queue - {}'.format(str(notification_queue)))
     messages = []
     now = datetime_util.get_current_time()
 
@@ -153,13 +150,13 @@ def is_open_window(mob):
 
 def is_past_window(mob):
     last_window = sheet_handler.get_last_window(mob)
-    # print(last_window > datetime_util.get_current_time())
+    # logging.info(last_window > datetime_util.get_current_time())
     if last_window is not None:
         return datetime_util.get_current_time() > last_window
     return True
 def queue_messages_for_mob(mob):
     tod = sheet_handler.get_col_by_mob('ONLY TOUCH', mob)
-    # print(tod)
+    # logging.info(tod)
     if tod.strip() != '':
         try:
             tod = datetime_util.get_datetime_from_str(tod)
@@ -175,8 +172,8 @@ def queue_messages_for_mob(mob):
                     if message_timestamp > now:
                         add_notification_to_queue(message_timestamp, message_content)
         except Exception as e:
-            print('An error occured while queuing messages for mob {} - Probably an invalid ToD format'.format(mob))
-            print(str(e))
+            logging.info('An error occured while queuing messages for mob {} - Probably an invalid ToD format'.format(mob))
+            logging.info(str(e))
 
 def queue_all_from_sheet():
     global notification_queue
@@ -186,7 +183,7 @@ def queue_all_from_sheet():
     for mob in mobs:
         queue_messages_for_mob(mob)
 
-    # print(notification_queue)
+    # logging.info(notification_queue)
 
 def remove_notifications_for_mob(mob):
     global notification_queue

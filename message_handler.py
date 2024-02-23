@@ -1,7 +1,6 @@
 import re
-import pytz
-from datetime import datetime, timedelta
-
+from datetime import  timedelta
+import logging
 import config
 import datetime_util
 
@@ -37,16 +36,18 @@ def parse_message(content):
 
     input_time = datetime_util.get_current_time()
     input_time = input_time.replace(hour=hours, minute=minutes, second=seconds)
-    print('time before adjusting for timezone', input_time)
+    # logging.info('time before adjusting for timezone', input_time)
     input_time = input_time - timedelta(hours=after_eastern)
-    print('time after adjusting for timezone', input_time)
+    # logging.info('time after adjusting for timezone', input_time)
 
     if input_time > datetime_util.get_current_time():
         input_time = input_time - timedelta(days=1)
 
-    print('day adjusted time', input_time)
+    # logging.info('day adjusted time', input_time)
 
     # Format the time
     time_of_death = input_time.strftime(config.date_format)
+
+    logging.info("message processed.\n\tmob: [{}]\n\tToD: [{}]".format(mob, time_of_death))
 
     return mob, time_of_death

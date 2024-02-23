@@ -2,6 +2,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from datetime import datetime, timedelta
+import logging
 
 import config
 import datetime_util
@@ -29,18 +30,18 @@ def load_sheet():
     global df
     global google_client
 
-    print("logging in to google service account")
+    logging.info("logging in to google service account")
 
     credentials = ServiceAccountCredentials.from_json_keyfile_name("creds.json",
                                                                    scopes)  # access the json key you downloaded earlier
     google_client = gspread.authorize(credentials)  # authenticate the JSON key with gspread
-    print('opening sheet {}'.format(sheet_name))
+    logging.info('opening sheet {}'.format(sheet_name))
     document = google_client.open(sheet_name)  # open sheet
-    print("google sheet opened!")
+    logging.info("google sheet opened!")
     try:
         sheet = document.get_worksheet(0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
     except Exception as e:
-        print("An exception occured opening the google sheet: {}".format(e))
+        logging.info("An exception occured opening the google sheet: {}".format(e))
 
     data = sheet.get_all_values()
 
@@ -59,7 +60,7 @@ def reload_sheet():
     try:
         sheet = document.get_worksheet(0)  # replace sheet_name with the name that corresponds to yours, e.g, it can be sheet1
     except Exception as e:
-        print("An exception occured opening the google sheet: {}".format(e))
+        logging.info("An exception occured opening the google sheet: {}".format(e))
 
     data = sheet.get_all_values()
 
@@ -69,7 +70,6 @@ def reload_sheet():
     df = pd.DataFrame(data, columns=headers)
 
 def update_sheet(mob_alias, time_of_death):
-    print('mob {} tod {}'.format(mob_alias, time_of_death))
     global df
     hq = None
 
@@ -93,6 +93,7 @@ def update_sheet(mob_alias, time_of_death):
                 else:
                     hq = False
                 break
+        aliases.close()
 
     if hq is None:
         raise Exception('Invalid mob name')
@@ -111,15 +112,15 @@ def update_helper(mob, time_of_death, is_HQ):
             notes = 'Day 1'
         else:
             # if the ToD is before the first window, do not update the day
-            print(f'time of death {time_of_death}')
+            logging.info(f'time of death {time_of_death}')
             if datetime_util.get_datetime_from_str(time_of_death) > get_first_window(mob):
                 day = int(notes.split(' ')[1]) + 1
                 notes = 'Day ' + str(day)
 
-    # print('update helper mob {} tod {} hq {}'.format(mob, time_of_death, is_HQ))
+    # logging.info('update helper mob {} tod {} hq {}'.format(mob, time_of_death, is_HQ))
     sheet.update_cell(row + row_offset, get_col_of_TOD() + col_offset, time_of_death)
 
-    # print('notes {}'.format(notes.strip()))
+    # logging.info('notes {}'.format(notes.strip()))
     if notes.strip() != '':
         sheet.update_cell(row + row_offset, get_col_of_notes() + col_offset, notes)
 
@@ -141,7 +142,7 @@ def get_first_window(mob):
         min_respawn_time = get_col_by_mob('min respawn time', mob)
         min_hours, min_minutes, min_seconds = min_respawn_time.split(':')
         first_window = tod + timedelta(hours=int(min_hours), minutes=int(min_minutes))
-        # print(f'first window {first_window}')
+        # logging.info(f'first window {first_window}')
         return first_window
 def get_sheet_dataframe():
     return df
