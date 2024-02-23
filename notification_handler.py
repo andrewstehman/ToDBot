@@ -10,7 +10,7 @@ minutes_to_alert_before = [60, 30, 5]
 last_menu_notification = None
 async def test_notifications():
     logging.info(config.guilds)
-    queue_all_from_sheet()
+    await queue_all_from_sheet()
     while True:
         for guild in config.guilds:
             if guild.name == config.test_guild:
@@ -175,7 +175,7 @@ def queue_messages_for_mob(mob):
             logging.info('An error occured while queuing messages for mob {} - Probably an invalid ToD format'.format(mob))
             logging.info(str(e))
 
-def queue_all_from_sheet():
+async def queue_all_from_sheet():
     global notification_queue
     notification_queue = []
     mobs = sheet_handler.get_all_mobs_as_list()

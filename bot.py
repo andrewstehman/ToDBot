@@ -29,9 +29,9 @@ async def on_ready():
         for guild in client.guilds:
             config.guilds.append(guild)
 
-        sheet_handler.load_sheet()
+        await sheet_handler.load_sheet()
 
-        notification_handler.queue_all_from_sheet()
+        await notification_handler.queue_all_from_sheet()
         bot_started = True
 
 @client.event
@@ -50,7 +50,7 @@ async def on_message(message):
         try:
             mob, time_of_death = message_handler.ingest_message(message)
             logging.info("message handled, updating sheet...")
-            sheet_handler.update_sheet(mob, time_of_death)
+            await sheet_handler.update_sheet(mob, time_of_death)
             logging.info("sheet updated, adding thumbs up...")
 
             await message.add_reaction(config.thumbs_up)
@@ -95,7 +95,7 @@ async def start_notification_thread():
                 await notification_channel.send(message)
 
         # sheet_handler.reload_sheet()
-        notification_handler.queue_all_from_sheet()
+        await notification_handler.queue_all_from_sheet()
         await asyncio.sleep(60)
 
 loop = asyncio.get_event_loop()

@@ -25,7 +25,7 @@ row_offset = 3
 col_offset = 1
 
 
-def load_sheet():
+async def load_sheet():
     global sheet
     global df
     global google_client
@@ -52,7 +52,7 @@ def load_sheet():
 
 
 
-def reload_sheet():
+async def reload_sheet():
     global sheet
     global df
 
@@ -69,7 +69,7 @@ def reload_sheet():
 
     df = pd.DataFrame(data, columns=headers)
 
-def update_sheet(mob_alias, time_of_death):
+async def update_sheet(mob_alias, time_of_death):
     global df
     hq = None
 
@@ -100,7 +100,7 @@ def update_sheet(mob_alias, time_of_death):
     else:
         update_helper(real_name, time_of_death, hq)
 
-    reload_sheet()
+    await reload_sheet()
 
 
 def update_helper(mob, time_of_death, is_HQ):
