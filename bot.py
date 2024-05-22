@@ -9,7 +9,7 @@ import sys
 from dotenv import load_dotenv
 import sheet_handler
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - [%(levelname)s] - %(message)s', stream=sys.stdout)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - [%(levelname)s] - %(message)s', stream=sys.stdout)
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
